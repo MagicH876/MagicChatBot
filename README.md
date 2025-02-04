@@ -11,7 +11,7 @@
 ---
 
 - [x] Making this GitHub Repo
-- [ ] Make the basic functions for a Discord bot
+- [x] Make the basic functions for a Discord bot
 - [ ] Dynamic "Help" function
 - [ ] Commands for Utility (Server lists, members, etc.)
 - [ ] AI integration
