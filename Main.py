@@ -82,7 +82,7 @@ bot = commands.Bot(command_prefix='!', intents=intents, help_command=HelpCommand
 async def on_ready():
     print(f"Logged as {bot.user}  :  ID {bot.user.id}\n")
 
-### THE FOLLOWING IS PREGENERATED TESTING CONTENT THIS IS NOT FINALIZED.
+# THE FOLLOWING IS PREGENERATED TESTING CONTENT THIS IS NOT FINALIZED.
 
 # Example command in the default (no cog) category
 @bot.command(help="Says hello!")
