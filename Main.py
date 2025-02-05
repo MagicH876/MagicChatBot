@@ -17,7 +17,7 @@ class HelpCommand(commands.HelpCommand):
     async def send_bot_help(self, mapping):
         """Called when the user inputs the help command with no arguments."""
         embed = discord.Embed(
-            tile='Bot Commands', 
+            title='Bot Commands', 
             description='Here are the commands you can use:',
             color=discord.Color.dark_purple()
             )
