@@ -78,9 +78,25 @@ class HelpCommand(commands.HelpCommand):
 
 bot = commands.Bot(command_prefix='!', intents=intents, help_command=HelpCommand())
 
+# NOTE : Add cogs into on_ready() event
+
 @bot.event
 async def on_ready():
     print(f"Logged as {bot.user}  :  ID {bot.user.id}\n")
+    await bot.add_cog(MathCog(bot))
+    await bot.add_cog(UtilityCog(bot=bot))
+
+class UtilityCog(commands.Cog, name="Utility Commands"):
+    """Commands for interacting with the server."""
+
+    def __init__(self, bot):
+        self.bot = bot
+        
+    @commands.command(name="ping", help="Pings the bot.")
+    async def ping(self, ctx):
+        """Checks the bots latency"""
+        latency = round(bot.latency * 1000)
+        await ctx.send(f"# Pong!\n### Latency: `{latency}ms`")
 
 # THE FOLLOWING IS PREGENERATED TESTING CONTENT THIS IS NOT FINALIZED.
 
@@ -104,6 +120,5 @@ class MathCog(commands.Cog, name="Math Commands"):
         await ctx.send(f"The result is {result}")
 
 # Adding the cog to the bot
-bot.add_cog(MathCog(bot))
 
 bot.run(TOKEN)
