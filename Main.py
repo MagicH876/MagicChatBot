@@ -8,6 +8,8 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 intents = discord.Intents.default()
 intents.message_content = True
+intents.members = True
+intents.presences = True
 
 class HelpCommand(commands.HelpCommand):
     def __init__(self):
@@ -21,7 +23,7 @@ class HelpCommand(commands.HelpCommand):
             description='Here are the commands you can use:',
             color=discord.Color.dark_purple()
             )
-        
+
         for cog, commands_list in mapping.items():
             filtered = await self.filter_commands(commands_list, sort=True)
             if not filtered:
@@ -32,7 +34,7 @@ class HelpCommand(commands.HelpCommand):
             embed.add_field(
                 name=cog_name, value="\n".join(command_signatures), inline=False
             )
-        
+
         destination = self.get_destination()
         await destination.send(embed=embed)
 
@@ -57,7 +59,7 @@ class HelpCommand(commands.HelpCommand):
                 value="No available commands in this category",
                 inline=False
             )
-        
+
         destination = self.get_destination()
         await destination.send(embed=embed)
 
@@ -91,12 +93,92 @@ class UtilityCog(commands.Cog, name="Utility Commands"):
 
     def __init__(self, bot):
         self.bot = bot
-        
+
     @commands.command(name="ping", help="Pings the bot.")
     async def ping(self, ctx):
         """Checks the bots latency"""
         latency = round(bot.latency * 1000)
         await ctx.send(f"# Pong!\n### Latency: `{latency}ms`")
+
+    @commands.command(name="memberInfo", help="Provides member info for yourself or another user.")
+    async def memberInfo(self, ctx):
+        """Fetches general info about a user"""
+        mentions = ctx.message.mentions
+        if not mentions:
+            guildUser = ctx.author
+            user = await bot.fetch_user(guildUser.id)
+        else:
+            guildUser = ctx.message.mentions[0]
+            user = await bot.fetch_user(guildUser.id)
+
+        if user.banner:
+            banner = user.banner.url
+        else:
+            banner = "User has no banner."
+
+        if guildUser.status == discord.Status.online:
+            userColor = discord.Color.green()
+        elif guildUser.status == discord.Status.idle:
+            userColor = discord.Color.gold()
+        elif guildUser.status == discord.Status.dnd:
+            userColor = discord.Color.red()
+        else:
+            userColor = discord.Color.dark_gray()
+
+        embed = discord.Embed(
+            title = "User Info:",
+            color = userColor
+            )
+
+        embed.add_field(
+            name = "userId",
+            value = guildUser.id,
+            inline = False
+        )
+
+        embed.add_field(
+            name = "username",
+            value = guildUser.name,
+            inline = False
+        )
+
+        embed.add_field(
+            name = "nick",
+            value = guildUser.nick,
+            inline = False
+        )
+
+        embed.add_field(
+            name = "banner",
+            value = banner,
+            inline = False
+        )
+
+        embed.add_field(
+            name = "username",
+            value = user.avatar.url,
+            inline = False
+        )
+
+        embed.add_field(
+            name = "activity",
+            value = guildUser.activity,
+            inline = False
+        )
+
+        embed.add_field(
+            name = "status",
+            value = guildUser.status,
+            inline = False
+        )
+
+        embed.add_field(
+            name = "roles",
+            value = str(len(guildUser.roles)),
+            inline = False
+        )
+
+        await ctx.send(embed=embed)
 
 # THE FOLLOWING IS PREGENERATED TESTING CONTENT THIS IS NOT FINALIZED.
 
@@ -109,7 +191,7 @@ async def hello(ctx):
 # Example cog with a command
 class MathCog(commands.Cog, name="Math Commands"):
     """Commands for math operations."""
-    
+
     def __init__(self, bot):
         self.bot = bot
 
